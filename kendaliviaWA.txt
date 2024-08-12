@@ -1,0 +1,75 @@
+#include <ESP8266WiFi.h>
+#include <ThingESP.h>
+
+
+ThingESP8266 thing("username", "projectname", "credential");
+
+#define relayon 0
+#define relaystart 2
+
+unsigned long previousMillis = 0;
+const long INTERVAL = 6000;  
+
+void setup()
+{
+  Serial.begin(9600);
+  pinMode(relayon, OUTPUT);
+  pinMode(relaystart, OUTPUT);
+  thing.SetWiFi("ssid", "password");
+
+  thing.initDevice();
+
+}
+
+
+String HandleResponse(String query)
+{
+
+  if (query == "matiin aja") {
+    digitalWrite(relayon, LOW);
+    return "ih nyuruh2 terus :(, iya udah aku matiin";
+  }
+
+  else if (query == "nyalain dong") {
+    digitalWrite(relayon, HIGH);
+    return "iya-iya ini aku nyalain";
+  }
+
+  else if (query == "stater sayang" || query == "belum") {
+    digitalWrite(relaystart, HIGH);
+    delay(2000);
+    digitalWrite(relaystart, LOW);
+    return "udah belum";
+  }
+
+  else if (query == "udah")
+    return "okeee";
+
+  else if (query == "ready ga")
+    return digitalRead(relayon) ? "ayo, udah nyala kok" : "kontaknya belum nyala :)";
+
+  else if (query == "p")
+    return "iya, kenapa sayang?";
+
+  else if (query == "hehe")
+    return "mulai nih";
+
+  else if (query == "enggak")
+    return "apasihh";
+    
+  else if (query == "makasih")
+    return "iya, apasih yang nggak buat kamu 0_0";
+
+  else if (query == "oke")
+    return "hmmp";
+
+  else return "apasih, gak ngerti -_-";
+
+}
+
+
+void loop()
+{  
+  thing.Handle();
+
+}
